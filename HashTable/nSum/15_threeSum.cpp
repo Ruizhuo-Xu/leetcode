@@ -13,6 +13,9 @@ public:
         sort(nums.begin(), nums.end());
         vector<vector<int>> res;
         for (int i = 0; i < nums.size(); i++) {
+            if (nums[i] > 0) { // 剪枝
+                break;
+            }
             if (i > 0 && nums[i] == nums[i - 1]) { // 元素a去重
                 // 因为nums排序过，所以相同的值必然相连
                 continue;
