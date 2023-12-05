@@ -8,26 +8,32 @@ using namespace std;
 class Solution {
 public:
     vector<vector<int>> threeSum(vector<int>& nums) {
-        unordered_map<int, vector<vector<int>>> map; // a+b: [[a, b], [...]]
-        for (int i = 0; i < nums.size(); i++) { // 第一次遍历，记录所有两数之和的值及两数的索引
-            for (int j = i + 1; j < nums.size(); j++) {
-                map[nums[i]+nums[j]].push_back({nums[i], nums[j]});
-            }
-        }
-        unordered_set<vector<int>> res; // 使用unordered_set避免重复的三数组合
+        // 双指针: nums[i] + nums[left] + nums[right] = 0
+        // 因为题目返回的是数值而不是索引，所以可以排序
+        sort(nums.begin(), nums.end());
+        vector<vector<int>> res;
         for (int i = 0; i < nums.size(); i++) {
-            int gap = -nums[i];
-            if (map.find(gap) != map.end()) {
-                for (auto it : map[gap]) {
-                    if (i != it[0] && i != it[1]) { // 避免重复索引
-                        vector<int> temp = {nums[it[0]], nums[it[1]], nums[i]};
-                        sort(temp.begin(), temp.end()); // 排序，相同的三数组合排序后相等，然后使用set去除重复
-                        res.insert(temp);
-                    }
+            if (i > 0 && nums[i] == nums[i - 1]) { // 元素a去重
+                // 因为nums排序过，所以相同的值必然相连
+                continue;
+            }
+            int left = i + 1;
+            int right = nums.size() - 1;
+            while (right > left) {
+                int sum = nums[i] + nums[left] + nums[right];
+                if (sum > 0) right--;
+                else if (sum < 0) left++;
+                else {
+                    res.push_back({nums[i], nums[left], nums[right]});
+                    // 两个while循环的第一个条件防止后续数组越界
+                    while (right > left && nums[left] == nums[left + 1]) left++; //元素b去重
+                    while (right > left && nums[right] == nums[right - 1]) right--; // 元素c去重
+                    left++;
+                    right--;
                 }
             }
         }
-        return vector<vector<int>>(res.begin(), res.end());
+        return res;
     }
 };
 
