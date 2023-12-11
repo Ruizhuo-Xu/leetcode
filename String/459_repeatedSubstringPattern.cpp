@@ -1,22 +1,35 @@
 #include <iostream>
 #include <string>
+#include <vector>
 using namespace std;
 
 class Solution {
 public:
     bool repeatedSubstringPattern(string s) {
-        // 拼接两个s字符串，掐头去尾，如果中间还存在字符串s，则可以由子串重复得到(证明?);
-        // t.find(s)使用KMP，时间复杂度O(n+m)
-        string t = s + s;
-        t.erase(t.begin());
-        t.erase(t.end()-1);
-        if (t.find(s) != string::npos) return true;
+        vector<int> next(s.size());
+        getNext(next, s);
+        int len = s.size();
+        if (next[len - 1] != 0 && len % (len - next[len - 1]) == 0){ // next[len - 1] != 0说明有最长相等前后缀
+            return true;
+        }
         return false;
+    }
+
+    void getNext(vector<int>& next, const string s) {
+        int j = 0;
+        next[0] = 0;
+        for (int i = 1; i < next.size(); i++) {
+            while (j > 0 && s[j] != s[i]) {
+                j = next[j - 1];
+            }
+            if (s[j] == s[i]) j++;
+            next[i] = j;
+        }
     }
 };
 
 int main() {
-    string s = "abab";
+    string s = "ababab";
     cout << Solution().repeatedSubstringPattern(s) << endl;
     return 0;
 }

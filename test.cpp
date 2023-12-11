@@ -1,11 +1,11 @@
 #include <iostream>
+#include <string>
 #include <vector>
+#include <cstring>
 using namespace std;
 
 int main() {
-	vector<int> a = {1, 2, 3};
-	int i = 2;
-	cout << a[i--] << endl;
-	cout << a[i] << endl;
+	string s = "-11";
+	cout << stoi(s) << endl;
 	return 0;
 }
