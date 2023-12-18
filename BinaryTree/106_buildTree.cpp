@@ -1,8 +1,9 @@
 #include <iostream>
 #include <queue>
-#include <vector>
 #include <string>
+#include <vector>
 using namespace std;
+
 
 struct TreeNode {
     int val;
@@ -82,41 +83,48 @@ public:
 
 class Solution {
 public:
-    int maxDepth = 0;
-    int findBottomLeftValue(TreeNode* root) {
-        int res = 0;
-        int depth = 0;
-        if (root == nullptr) return res;
-        traversal(root, depth, res);
-        return res;
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        return traversal(inorder, postorder, 0, inorder.size(), 0, postorder.size());
     }
 
-    void traversal(TreeNode* cur, int& depth, int& res) {
-        depth++;
-        if (depth > maxDepth) {
-            maxDepth = depth;
-            res = cur->val; // 不是叶子结点也行
-            // if (cur->left == nullptr && cur->right == nullptr) { // 当前结点是目前最深的结点，且是叶子结点，则可能是代求的结果
-            //     res = cur->val;
-            // }
+    TreeNode* traversal(vector<int>& inorder, vector<int>& postorder,
+                        int inorderBegin, int inorderEnd, int postorderBegin, int postorderEnd) {
+        // 所有的索引(begin, end)均符合左闭右开原则
+        // 将中序数组和后序数组分为左中序、右中序和左后序、右后序
+        // 根据中序和后序数组递归建树
+        if ((postorderEnd - postorderBegin) == 0) {
+            return nullptr;
         }
-        if (cur->left == nullptr && cur->right == nullptr) {
-            return ;
+        int rootValue = postorder[postorderEnd - 1]; // 从后序遍历数组取出根结点的值
+        TreeNode* root = new TreeNode(rootValue);
+        if ((postorderEnd - postorderBegin) == 1) { // 叶子结点,递归返回
+            return root;
         }
-        if (cur->left) {
-            traversal(cur->left, depth, res);
-            depth--;
+        int delimiterIndex = inorderBegin;
+        for (; delimiterIndex < inorderEnd; delimiterIndex++) {
+            if (inorder[delimiterIndex] == rootValue) {
+                break;
+            }
         }
-        if (cur->right) {
-            traversal(cur->right, depth, res);
-            depth--;
-        }
+        int leftInorderBegin = inorderBegin;
+        int leftInorderEnd = delimiterIndex;
+        int rightInorderBegin = delimiterIndex + 1;
+        int rightInorderEnd = inorderEnd;
+        int leftPostorderBegin = postorderBegin;
+        int leftPostorderEnd = postorderBegin + (leftInorderEnd - leftInorderBegin);
+        int rightPostorderBegin = leftPostorderEnd;
+        int rightPostorderEnd = postorderEnd - 1; // 排除最后一个元素，已经作为节点了
+        root->left = traversal(inorder, postorder, leftInorderBegin, leftInorderEnd, leftPostorderBegin, leftPostorderEnd);
+        root->right = traversal(inorder, postorder, rightInorderBegin, rightInorderEnd, rightPostorderBegin, rightPostorderEnd);
+        return root;
     }
 };
 
 int main() {
-    string data = "[1,2,3,4,null,5,6,null,null,7]";
-    TreeNode* root = Codec().deserialize(data);
-    cout << Solution().findBottomLeftValue(root) << endl;
+    vector<int> inorder = {9,3,15,20,7};
+    vector<int> postorder = {9,15,7,20,3};
+    TreeNode* root = Solution().buildTree(inorder, postorder);
+    string tree = Codec().serialize(root);
+    cout << tree << endl;
     return 0;
 }

@@ -1,8 +1,9 @@
 #include <iostream>
 #include <queue>
-#include <vector>
 #include <string>
+#include <vector>
 using namespace std;
+
 
 struct TreeNode {
     int val;
@@ -82,41 +83,42 @@ public:
 
 class Solution {
 public:
-    int maxDepth = 0;
-    int findBottomLeftValue(TreeNode* root) {
-        int res = 0;
-        int depth = 0;
-        if (root == nullptr) return res;
-        traversal(root, depth, res);
-        return res;
+    bool hasPathSum(TreeNode* root, int targetSum) {
+        if (root == nullptr) return false;
+        int sum = root->val;
+        return traversal(root, targetSum, sum);
     }
 
-    void traversal(TreeNode* cur, int& depth, int& res) {
-        depth++;
-        if (depth > maxDepth) {
-            maxDepth = depth;
-            res = cur->val; // 不是叶子结点也行
-            // if (cur->left == nullptr && cur->right == nullptr) { // 当前结点是目前最深的结点，且是叶子结点，则可能是代求的结果
-            //     res = cur->val;
-            // }
-        }
+    bool traversal(TreeNode* cur, int targetsum, int sum) {
+        // sum表示根结点到当前结点路径的和
         if (cur->left == nullptr && cur->right == nullptr) {
-            return ;
+            if (sum == targetsum) return true;  // 根结点到叶子结点的和等于目标值
+            return false;
         }
         if (cur->left) {
-            traversal(cur->left, depth, res);
-            depth--;
+            sum += cur->left->val;
+            bool left = traversal(cur->left, targetsum, sum);
+            sum -= cur->left->val;
+            if (left) {
+                return true;
+            }
         }
         if (cur->right) {
-            traversal(cur->right, depth, res);
-            depth--;
+            sum += cur->right->val;
+            bool right = traversal(cur->right, targetsum, sum);
+            sum -= cur->right->val;
+            if (right) {
+                return true;
+            }
         }
+        return false;
     }
 };
 
 int main() {
-    string data = "[1,2,3,4,null,5,6,null,null,7]";
+    // string data = "[5,4,8,11,null,13,4,7,2,null,null,null,1]";
+    string data = "[1,2,3]";
     TreeNode* root = Codec().deserialize(data);
-    cout << Solution().findBottomLeftValue(root) << endl;
+    cout << Solution().hasPathSum(root, 22) << endl;
     return 0;
 }

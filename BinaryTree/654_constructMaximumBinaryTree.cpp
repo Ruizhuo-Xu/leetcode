@@ -1,8 +1,10 @@
 #include <iostream>
 #include <queue>
-#include <vector>
 #include <string>
+#include <vector>
+#include <cstdint>
 using namespace std;
+
 
 struct TreeNode {
     int val;
@@ -82,41 +84,39 @@ public:
 
 class Solution {
 public:
-    int maxDepth = 0;
-    int findBottomLeftValue(TreeNode* root) {
-        int res = 0;
-        int depth = 0;
-        if (root == nullptr) return res;
-        traversal(root, depth, res);
-        return res;
+    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {
+        return traversal(nums, 0, nums.size());
     }
 
-    void traversal(TreeNode* cur, int& depth, int& res) {
-        depth++;
-        if (depth > maxDepth) {
-            maxDepth = depth;
-            res = cur->val; // 不是叶子结点也行
-            // if (cur->left == nullptr && cur->right == nullptr) { // 当前结点是目前最深的结点，且是叶子结点，则可能是代求的结果
-            //     res = cur->val;
-            // }
+    TreeNode* traversal(vector<int>& nums, int begin, int end) {
+        // 区间为左闭右开 [begin, end)
+        if (begin == end) return nullptr; // 数组为空返回空指针
+        int delimiterIndex = -1;
+        int maxValue = INT32_MIN;
+        for (int i = begin; i < end; i++) { // 查找最大元素的值及其下标
+            if (nums[i] > maxValue) {
+                maxValue = nums[i];
+                delimiterIndex = i;
+            }
         }
-        if (cur->left == nullptr && cur->right == nullptr) {
-            return ;
+        TreeNode* root = new TreeNode(maxValue);
+        if (end - begin == 1) { // 叶子结点,直接返回
+            return root;
         }
-        if (cur->left) {
-            traversal(cur->left, depth, res);
-            depth--;
-        }
-        if (cur->right) {
-            traversal(cur->right, depth, res);
-            depth--;
-        }
+        int leftBegin = begin;
+        int leftEnd = delimiterIndex;
+        int rightBegin = delimiterIndex + 1;
+        int rightEnd = end;
+        root->left = traversal(nums, leftBegin, leftEnd);
+        root->right= traversal(nums, rightBegin, rightEnd);
+        return root;
     }
 };
 
 int main() {
-    string data = "[1,2,3,4,null,5,6,null,null,7]";
-    TreeNode* root = Codec().deserialize(data);
-    cout << Solution().findBottomLeftValue(root) << endl;
+    vector<int> nums = {3,2,1,6,0,5};
+    TreeNode* root = Solution().constructMaximumBinaryTree(nums);
+    string tree = Codec().serialize(root);
+    cout << tree << endl;
     return 0;
 }

@@ -1,8 +1,9 @@
 #include <iostream>
 #include <queue>
-#include <vector>
 #include <string>
+#include <vector>
 using namespace std;
+
 
 struct TreeNode {
     int val;
@@ -82,41 +83,45 @@ public:
 
 class Solution {
 public:
-    int maxDepth = 0;
-    int findBottomLeftValue(TreeNode* root) {
-        int res = 0;
-        int depth = 0;
-        if (root == nullptr) return res;
-        traversal(root, depth, res);
-        return res;
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        return traversal(preorder, inorder, 0, preorder.size(), 0, inorder.size());
     }
 
-    void traversal(TreeNode* cur, int& depth, int& res) {
-        depth++;
-        if (depth > maxDepth) {
-            maxDepth = depth;
-            res = cur->val; // 不是叶子结点也行
-            // if (cur->left == nullptr && cur->right == nullptr) { // 当前结点是目前最深的结点，且是叶子结点，则可能是代求的结果
-            //     res = cur->val;
-            // }
+    TreeNode* traversal(vector<int>& preorder, vector<int>& inorder,
+            int preorderBegin, int preorderEnd, int inorderBegin, int inorderEnd) {
+        if (preorderEnd == preorderBegin) {
+            return nullptr;
         }
-        if (cur->left == nullptr && cur->right == nullptr) {
-            return ;
+        int rootValue = preorder[preorderBegin];
+        TreeNode* root = new TreeNode(rootValue);
+        if (preorderEnd - preorderBegin == 1) {
+            return root;
         }
-        if (cur->left) {
-            traversal(cur->left, depth, res);
-            depth--;
+        int delimiterIndex = inorderBegin;
+        for (; delimiterIndex < inorderEnd; delimiterIndex++) {
+            if (inorder[delimiterIndex] == rootValue) {
+                break;
+            }
         }
-        if (cur->right) {
-            traversal(cur->right, depth, res);
-            depth--;
-        }
+        int leftInorderBegin = inorderBegin;
+        int leftInorderEnd = delimiterIndex;
+        int rightInorderBegin = delimiterIndex + 1;
+        int rightInorderEnd = inorderEnd;
+        int leftPreorderBegin = preorderBegin + 1;
+        int leftPreorderEnd = leftPreorderBegin + (leftInorderEnd - leftInorderBegin);
+        int rightPreorderBegin = leftPreorderEnd;
+        int rightPreorderEnd = preorderEnd;
+        root->left = traversal(preorder, inorder, leftPreorderBegin, leftPreorderEnd, leftInorderBegin, leftInorderEnd);
+        root->right = traversal(preorder, inorder, rightPreorderBegin, rightPreorderEnd, rightInorderBegin, rightInorderEnd);
+        return root;
     }
 };
 
 int main() {
-    string data = "[1,2,3,4,null,5,6,null,null,7]";
-    TreeNode* root = Codec().deserialize(data);
-    cout << Solution().findBottomLeftValue(root) << endl;
+    vector<int> preorder = {3,9,20,15,7};
+    vector<int> inorder = {9,3,15,20,7};
+    TreeNode* root = Solution().buildTree(preorder, inorder);
+    string tree = Codec().serialize(root);
+    cout << tree << endl;
     return 0;
 }

@@ -1,8 +1,9 @@
 #include <iostream>
 #include <queue>
-#include <vector>
 #include <string>
+#include <vector>
 using namespace std;
+
 
 struct TreeNode {
     int val;
@@ -82,41 +83,43 @@ public:
 
 class Solution {
 public:
-    int maxDepth = 0;
-    int findBottomLeftValue(TreeNode* root) {
-        int res = 0;
-        int depth = 0;
+    vector<vector<int>> pathSum(TreeNode* root, int targetSum) {
+        vector<vector<int>> res;
         if (root == nullptr) return res;
-        traversal(root, depth, res);
+        vector<int> path;
+        traversal(root, targetSum - root->val, path, res);
         return res;
     }
-
-    void traversal(TreeNode* cur, int& depth, int& res) {
-        depth++;
-        if (depth > maxDepth) {
-            maxDepth = depth;
-            res = cur->val; // 不是叶子结点也行
-            // if (cur->left == nullptr && cur->right == nullptr) { // 当前结点是目前最深的结点，且是叶子结点，则可能是代求的结果
-            //     res = cur->val;
-            // }
-        }
+    
+    void traversal(TreeNode* cur, int count, vector<int>& path, vector<vector<int>>& res) {
+        path.push_back(cur->val);
         if (cur->left == nullptr && cur->right == nullptr) {
+            if (count == 0) {
+                res.push_back(path);
+            }
             return ;
         }
         if (cur->left) {
-            traversal(cur->left, depth, res);
-            depth--;
+            traversal(cur->left, count - cur->left->val, path, res);
+            path.pop_back();
         }
         if (cur->right) {
-            traversal(cur->right, depth, res);
-            depth--;
+            traversal(cur->right, count - cur->right->val, path, res);
+            path.pop_back();
         }
     }
 };
 
 int main() {
-    string data = "[1,2,3,4,null,5,6,null,null,7]";
+    string data = "[5,4,8,11,null,13,4,7,2,null,null,5,1]";
+    int targetSum = 22;
     TreeNode* root = Codec().deserialize(data);
-    cout << Solution().findBottomLeftValue(root) << endl;
+    vector<vector<int>> res = Solution().pathSum(root, targetSum);
+    for (auto it : res) {
+        for (auto i : it) {
+            cout << i << ' ';
+        }
+        cout << endl;
+    }
     return 0;
 }
