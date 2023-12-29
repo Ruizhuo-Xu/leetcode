@@ -37,7 +37,7 @@ int main() {
 	// 	cout << s.first << ' ' << s.second << endl;
 	// 	// s.second++;
 	// }
-	cout << 4 % 4 << endl;
+	cout << pow(2, 30) << endl;
 
 	return 0;
 }
