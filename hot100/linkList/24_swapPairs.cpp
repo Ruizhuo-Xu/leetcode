@@ -14,13 +14,15 @@ public:
     ListNode* swapPairs(ListNode* head) {
         ListNode* dummyHead = new ListNode();
         dummyHead->next = head;
-        ListNode* cur = dummyHead;
-        while (cur->next != nullptr && cur->next->next != nullptr) {
-            ListNode* temp = cur->next->next->next;
-            cur->next->next->next = cur->next;
-            cur->next = cur->next->next;
-            cur->next->next->next = temp;
-            cur = cur->next->next;
+        ListNode* pre = dummyHead;
+        ListNode* cur = head;
+        while (cur != nullptr && cur->next != nullptr) {
+            ListNode* temp = cur->next->next;
+            cur->next->next = cur;
+            pre->next = cur->next;
+            cur->next = temp;
+            pre = cur;
+            cur = cur->next;
         }
         return dummyHead->next;
     }
