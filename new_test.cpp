@@ -15,10 +15,20 @@ int main() {
     // cout << a << endl;
     // unordered_set<int> set;
     // set.insert(1);
-    queue<int> que;
-    for (int i = 0; i < 5; i++) {
-        que.push(i);
+    // queue<int> que;
+    // for (int i = 0; i < 5; i++) {
+    //     que.push(i);
+    // }
+    // cout << que.front() << ' ' << que.back() << endl;
+    // deque<int> que;
+    // que.
+    vector<int> nums(5);
+    for (int i = 0; i < nums.size(); i++) {
+        cin >> nums[i];
     }
-    cout << que.front() << ' ' << que.back() << endl;
+    for (int i = 0; i < nums.size(); i++) {
+        cout << nums[i] << ' ';
+    }
+    cout << endl;
     return 0;
 }

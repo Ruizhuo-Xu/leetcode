@@ -21,12 +21,42 @@ void downAdjust(vector<int>& nums, int i, int heapSize) {
     }
 }
 
+void downAdjust_(vector<int>& nums, int i, int heapSize) {
+    // 非递归
+    while (i < heapSize) {
+        int left = i * 2 + 1;
+        int right = i * 2 + 2;
+        int maxIndex = i;
+        if (left < heapSize && nums[left] > nums[maxIndex]) maxIndex = left;
+        if (right < heapSize && nums[right] > nums[maxIndex]) maxIndex = right;
+        if (maxIndex != i) {
+            swap(nums[i], nums[maxIndex]);
+            i = maxIndex;
+        } else {
+            break;
+        }
+    }
+}
+
+void upAdjust(vector<int>& nums, int i) {
+    int parent = (i - 1) / 2;
+    if (parent >= 0 && nums[parent] < nums[i]) {
+        swap(nums[parent], nums[i]);
+        upAdjust(nums, parent);
+    }
+}
+
 void buildHeap(vector<int>& nums) {
     // 建堆 时间复杂度O(n)
     int heapSize = nums.size();
     for (int i = heapSize / 2; i >= 0; i--) { // 节点数为n的完全二叉树的叶子节点数量为 n/2 (向上取整)
         downAdjust(nums, i, heapSize);
     }
+}
+
+void insert(vector<int>& heap, int val) {
+    heap.push_back(val);
+    upAdjust(heap, heap.size() - 1);
 }
 
 void heapSort(vector<int>& nums) {
@@ -40,7 +70,17 @@ void heapSort(vector<int>& nums) {
 
 int main() {
     vector<int> nums = {85, 55, 82, 57, 68, 92, 99, 98, 66, 56};
-    heapSort(nums);
+    buildHeap(nums); // 建堆
+    for (auto num : nums) {
+        cout << num << ' ';
+    }
+    cout << endl;
+    insert(nums, 100); // 堆插入
+    for (auto num : nums) {
+        cout << num << ' ';
+    }
+    cout << endl;
+    heapSort(nums); // 堆排序
     for (auto num : nums) {
         cout << num << ' ';
     }

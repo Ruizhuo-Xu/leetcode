@@ -5,13 +5,14 @@ using namespace std;
 class Solution {
 public:
     bool canJump(vector<int>& nums) {
-        int maxCover = 0; // 最大覆盖范围(下标)
-        for (int i = 0; i < nums.size(); i++) {
-            if (i > maxCover) { // 当前下标超出覆盖范围，说明无法到达末尾 // 这个条件必须放这个位置
-                return false;
+        int curCover = 0; // 当前这一步跳跃可以覆盖的范围，初始只能从期起点出发
+        int maxCover = 0; // 从当前这一步跳跃覆盖的范围起跳，最远可以覆盖的下一步跳跃范围
+        for (int i = 0; i <= curCover; i++) {
+            maxCover = max(maxCover, i + nums[i]); // 更新下一步跳跃的最大范围
+            if (i == curCover) { // 当前这一步跳跃的末尾，即将进入下一步跳跃
+                curCover = maxCover;
             }
-            maxCover = max(maxCover, i + nums[i]); // 不断更新覆盖范围
-            if (maxCover >= nums.size() - 1) { // 能覆盖到末尾
+            if (maxCover >= nums.size() - 1) {
                 return true;
             }
         }

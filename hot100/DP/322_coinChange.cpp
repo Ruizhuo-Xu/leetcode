@@ -15,7 +15,7 @@ public:
         dp[0] = 0;
         for (int i = 0; i < coins.size(); i++) {
             for (int j = coins[i]; j <= amount; j++) { // 只能从coins[i]开始才考虑取或不取
-                if (dp[j - coins[i]] != INT32_MAX) { // 可以组成 j - coins[i]
+                if (dp[j - coins[i]] != INT32_MAX) { // 可以组成 j - coins[i], // INT32_MAX + 1会上溢 !!!
                     dp[j] = min(dp[j], dp[j - coins[i]] + 1);
                 }
             }

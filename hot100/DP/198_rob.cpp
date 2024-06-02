@@ -8,7 +8,7 @@ public:
         // dp[i]: 0-i户人家最多可以偷盗的钱
         // dp[i] = max(dp[i - 2] + nums[i] + dp[i - 1])
         // dp[0] = nums[0]; dp[1] = max(nums[0], nums[1]);
-        if (nums.size() == 1) return nums[0]; // 因为初始化需要至少2个元素
+        if (nums.size() == 1) return nums[0]; //  // 如果nums只有一个元素，那么下面dp[1]初始化会越界
         vector<int> dp(nums.size(), 0);
         dp[0] = nums[0];
         dp[1] = max(nums[0], nums[1]);

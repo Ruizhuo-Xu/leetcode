@@ -6,7 +6,10 @@ class Solution {
 public:
     int findKthLargest(vector<int>& nums, int k) {
         buildHeap(nums);
-        for (int i = nums.size() - 1; i >= nums.size() - k && i >= 1; i--) { // i >= 1的条件还是需要，否则会有异常(如果数组只有一个元素，k=1的情况)
+        // int size = nums.size();
+        // for (int i = size - 1; i >= size - k; i--) {
+        for (int i = nums.size() - 1; i >= nums.size() - k; i--) {
+            cout << i << ' ';
             swap(nums[i], nums[0]);
             downAdjust(nums, 0, i);
         }
@@ -38,7 +41,8 @@ public:
 };
 
 int main() {
-    vector<int> nums = {3, 2, 1, 5, 6, 4};
-    cout << Solution().findKthLargest(nums, 2) << endl;
+    // vector<int> nums = {3, 2, 1, 5, 6, 4};
+    vector<int> nums = {1};
+    cout << Solution().findKthLargest(nums, 1) << endl;
     return 0;
 }
