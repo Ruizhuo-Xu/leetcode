@@ -18,6 +18,7 @@ public:
     }
 
     void traversal(TreeNode* root, int depth) {
+        // 求树的深度,用前序遍历
         if (root->left == nullptr && root->right == nullptr) {
             res = min(res, depth);
             return ;
