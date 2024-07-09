@@ -1,11 +1,10 @@
 #include <iostream>
+#include <vector>
 using namespace std;
 
 int main() {
     // cout << "hello world" << endl;
-    string s = "abc";
-    cout << s.size() << endl; 
-    s.resize(s.size() * 2);
-    cout << s.size() << endl;
+    vector<int> nums = {};
+    cout << (int)nums.size() - 1 << endl;
     return 0;
 }
