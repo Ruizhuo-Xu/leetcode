@@ -18,7 +18,7 @@ public:
         }
         unordered_set<int> set;
         for (int i = startIdx; i < nums.size(); i++) {
-            if (set.find(nums[i]) == set.end() && (path.size() > 0 && nums[i] >= path[path.size() - 1]) || path.size() == 0) {
+            if (set.find(nums[i]) == set.end() && (path.size() > 0 && nums[i] >= path[path.size() - 1] || path.size() == 0)) {
                 set.insert(nums[i]);
                 path.push_back(nums[i]);
                 bakctracking(nums, i + 1);

@@ -1,10 +1,14 @@
 #include <iostream>
 #include <vector>
+#include <algorithm>
+
 using namespace std;
 
 int main() {
-    // cout << "hello world" << endl;
-    vector<int> nums = {};
-    cout << (int)nums.size() - 1 << endl;
+    vector<string> strs = {"AKL", "ABC", "CVT", "BGE"};
+    sort(strs.begin(), strs.end());
+    for (string str : strs) {
+        cout << str << endl;
+    }
     return 0;
 }
