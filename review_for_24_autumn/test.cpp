@@ -5,10 +5,7 @@
 using namespace std;
 
 int main() {
-    vector<string> strs = {"AKL", "ABC", "CVT", "BGE"};
-    sort(strs.begin(), strs.end());
-    for (string str : strs) {
-        cout << str << endl;
-    }
+    pair<int, int> x(1, 2);
+    cout << x.first << x.second << endl;
     return 0;
 }
